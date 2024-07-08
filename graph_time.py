@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import FuncFormatter
 import sys
 
 if len(sys.argv) < 3:
@@ -23,7 +24,7 @@ std_dev_duration = grouped.std()
 x_values = np.arange(len(mean_duration))
 
 # Plotting with wider figure size
-plt.figure(figsize=(12, 6))  # Width = 12 inches, Height = 6 inches
+plt.figure(figsize=(12, 8), dpi=200)  # Width = 12 inches, Height = 6 inches
 
 # Plot points with error bars
 plt.errorbar(x_values, mean_duration, yerr=std_dev_duration, fmt='o', capsize=5, label='Mean Duration')
@@ -31,7 +32,7 @@ plt.errorbar(x_values, mean_duration, yerr=std_dev_duration, fmt='o', capsize=5,
 # Plot a line connecting the points
 plt.plot(x_values, mean_duration, marker='o', linestyle='-', color='b', label='Line Through Points')
 
-plt.xlabel('Data Size Index')
+plt.xlabel('Data Size (B)')
 plt.ylabel('Duration (ms)')
 plt.title('Mean and Standard Deviation of Duration for Each Byte Size')
 

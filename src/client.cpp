@@ -42,7 +42,7 @@ int main(int argc, const char** argv) {
             std::cout << "================================================" << std::endl;
         }
         // NOTE: 1 GB is 30
-    } while(cur_pow <= 26);
+    } while(cur_pow <= 30);
 
     return 0;
 }
