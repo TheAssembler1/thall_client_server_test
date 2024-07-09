@@ -1,7 +1,7 @@
 #ifndef CU_FUSE_SHARED_HPP
 #define CU_FUSE_SHARED_HPP
 
-#define NETWORK_TYPE "na+sm"
+#define NETWORK_TYPE "sockets"
 #define ADDRESS_BOOK "./address_book.txt"
 #define ITERATIONS 10
 #define CLIENT_CSV "./client_time.csv"
