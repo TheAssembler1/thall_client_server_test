@@ -14,8 +14,8 @@ include_directories(${MARGO_INCLUDE_DIRS})
 include_directories(${THALLIUM_INCLUDE_DIRS})
 
 
-add_executable(server src/server.cpp)
-add_executable(client src/client.cpp)
+add_executable(server src/server.cpp src/cu_stat.cpp)
+add_executable(client src/client.cpp src/cu_stat.cpp)
 
 # Link necessary libraries
 target_link_libraries(server PRIVATE PkgConfig::MARGO PkgConfig::THALLIUM)

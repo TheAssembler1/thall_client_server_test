@@ -9,8 +9,8 @@
 #include "shared.hpp"
 
 int main(int argc, const char** argv) {
-    tl::engine myEngine(NETWORK_TYPE, THALLIUM_CLIENT_MODE);
-    tl::remote_procedure rpc_resp_vec = myEngine.define("rpc_resp_vec");
+    tl::engine my_engine(NETWORK_TYPE, THALLIUM_SERVER_MODE, true, 16);
+    tl::remote_procedure rpc_resp_vec = my_engine.define("rpc_resp_vec");
 
     std::cout << "reading in server address from address book" << std::endl;
     std::ifstream is{ADDRESS_BOOK};
@@ -18,31 +18,27 @@ int main(int argc, const char** argv) {
     is >> address;
     std::cout << "server address: " << address << std::endl;
 
-    tl::endpoint server = myEngine.lookup(address);
+    tl::endpoint server = my_engine.lookup(address);
 
     std::ofstream csv_os{CLIENT_CSV};
     csv_os << CSV_HEADER << std::endl;
+    int vec_size = 144;
 
-    int cur_pow = 0;
-    do {
-        const int cur_vec_size = std::pow(2, cur_pow);
-        cur_pow++;
+    for(int i = 1; i <= ITERATIONS; i++) {
+        std::cout << "================================================" << std::endl;
+        std::cout << "making request for vec of size: " << vec_size << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        lstat_return_type return_type = rpc_resp_vec.on(server)(vec_size, i);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "received vec of byte size: " << "0" << std::endl;
+        std::cout << "done requesting vec of bytes" << std::endl;
+        std::cout << "time elapsed: " << duration.count() << " milliseconds" << std::endl;
+        csv_os << "0" << "," << i << "," << duration.count() << std::endl;
+        std::cout << "================================================" << std::endl;
+    }
 
-        for(int i = 1; i <= ITERATIONS; i++) {
-            std::cout << "================================================" << std::endl;
-            std::cout << "making request for vec of size: " << cur_vec_size << std::endl;
-            auto start = std::chrono::high_resolution_clock::now();
-            std::vector<std::byte> vec = rpc_resp_vec.on(server)(cur_vec_size, i);
-            auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-            std::cout << "received vec of byte size: " << vec.size() << std::endl;
-            std::cout << "done requesting vec of bytes" << std::endl;
-            std::cout << "time elapsed: " << duration.count() << " milliseconds" << std::endl;
-            csv_os << cur_vec_size << "," << i << "," << duration.count() << std::endl;
-            std::cout << "================================================" << std::endl;
-        }
-        // NOTE: 1 GB is 30
-    } while(cur_pow <= 30);
+    std::cout << "DONE!!!" << std::endl;
 
     return 0;
 }
