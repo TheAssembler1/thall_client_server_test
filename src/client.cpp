@@ -18,6 +18,12 @@ int main(int argc, const char** argv) {
     is >> address;
     std::cout << "server address: " << address << std::endl;
 
+    if(address.empty()) {
+        throw std::runtime_error("address was not found!");
+    }
+
+    is.close();
+
     tl::endpoint server = my_engine.lookup(address);
 
     std::ofstream csv_os{CLIENT_CSV};
